@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 
 @dataclass(frozen=True)
 class Account:
-    """Class for tracking spendings of a person"""
+    """Class for associating a person and it's spendings"""
     name: str
     spendings: float = field(default=0.0, compare=False)
 

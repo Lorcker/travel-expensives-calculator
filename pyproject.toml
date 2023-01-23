@@ -13,9 +13,14 @@ dependencies = [
 ]
 requires-python = ">=3.11"
 license = {text = "MIT"}
+[project.optional-dependencies]
+docu = [
+    "mkdocstrings[python]>=0.20.0",
+    "mkdocs-material>=9.0.6",
+]
 
 [tool.pdm.scripts]
-start = "python3 module/main.py"
+start = "python3 travel-expensives-calculator/main.py"
 test = "pytest"
 
 [tool.pdm.dev-dependencies]

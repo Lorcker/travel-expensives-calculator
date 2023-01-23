@@ -1,5 +1,8 @@
-from module.cli import printAccounts, printHeader, printTransactions
-from module.models import Account, Transaction
+from cli import print_group, print_input_information, print_due_transactions
+from models import Account, Transaction
+
+import sys
+sys.path.append('travel-expensives-calculator')
 
 
 def test_print():
@@ -18,6 +21,6 @@ def test_print():
         Transaction(person6, person3, 55.0)
     ]
 
-    printAccounts(accounts=accounts)
-    printHeader(accounts=accounts)
-    printTransactions(transactions=transactions)
+    print_group(group=accounts)
+    print_input_information(group=accounts)
+    print_due_transactions(transactions=transactions)

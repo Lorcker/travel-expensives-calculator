@@ -1,8 +1,8 @@
-from models import Transaction, Account
 from core import calculate_minimal_transactions
+from models import Transaction, Account
 
 import sys
-sys.path.append('module')
+sys.path.append('travel-expensives-calculator')
 
 
 def test_one_person():
@@ -50,6 +50,6 @@ def test_multiple_persons_mixed_spendings():
         Transaction(person6, person3, 55.0)
     ]
 
-    actual = calculate_minimal_transactions(accounts=accounts)
+    actual = calculate_minimal_transactions(group=accounts)
 
     assert actual == expected

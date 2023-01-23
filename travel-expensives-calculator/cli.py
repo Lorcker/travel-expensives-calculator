@@ -1,3 +1,5 @@
+from enum import Enum
+
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
 
@@ -10,7 +12,13 @@ from models import Account, Transaction
 from core import calculate_minimal_transactions, calculate_total_spendings, calculate_debt_per_person
 
 
-def enterAccount():
+class Command(Enum):
+    ADD_PERSON = 0
+    CALCULATE_TRANSACTIONS = 1
+    EXIT = 3
+
+
+def enter_account() -> Account:
     name = inquirer.text(message="Enter name of the person:").execute()
     spendings = inquirer.number(
         message=f"Enter spendings of {name}:",
@@ -21,36 +29,37 @@ def enterAccount():
     return Account(name=name, spendings=float(spendings))
 
 
-def selectAction():
+def select_command() -> Command:
     return inquirer.select(
         message="Select an action:",
         choices=[
-                Choice(value="ADD", name="Add person"),
-                Choice(value="CALC", name="Calculate Transactions"),
-                Choice(value=None, name="Exit")
+                Choice(value=Command.ADD_PERSON, name="Add person"),
+                Choice(value=Command.CALCULATE_TRANSACTIONS,
+                       name="Calculate Transactions"),
+                Choice(value=Command.EXIT, name="Exit")
         ],
         default="ADD"
     ).execute()
 
 
-def totalPanel(accounts: list[Account]) -> Panel:
+def total_spendings_panel(group: list[Account]) -> Panel:
     return Panel.fit(
-        f"[green]{calculate_total_spendings(accounts=accounts):.2f}€", title="Total spendings")
+        f"[green]{calculate_total_spendings(group=group):.2f}€", title="Total spendings")
 
 
-def debtPerPersonPanel(accounts: list[Account]) -> Panel:
+def debt_per_person_panel(group: list[Account]) -> Panel:
     return Panel.fit(
-        f"[yellow]{calculate_debt_per_person(accounts=accounts):.2f}€", title="Debt per person")
+        f"[yellow]{calculate_debt_per_person(group=group):.2f}€", title="Debt per person")
 
 
-def printHeader(accounts: list[Account]):
-    debtPerPerson = debtPerPersonPanel(accounts)
-    total = totalPanel(accounts)
+def print_input_information(group: list[Account]):
+    debtPerPerson = debt_per_person_panel(group)
+    total = total_spendings_panel(group)
     print()
     print(Columns([total, debtPerPerson]))
 
 
-def printTransactions(transactions: list[Transaction]):
+def print_due_transactions(transactions: list[Transaction]):
     table = Table(
         title="[b]Following Transactions have to be made:", leading=1)
 
@@ -67,15 +76,16 @@ def printTransactions(transactions: list[Transaction]):
     print(table)
 
 
-def printAccounts(accounts: list[Account]):
+def print_group(group: list[Account]):
     table = Table(title="[b]All these people had fun together:", leading=1)
 
     table.add_column("Name", style="yellow")
     table.add_column("Spendings", style="green")
 
-    for account in accounts:
+    for member in group:
         table.add_row(
-            account.name, f"{account.spendings:.2f}€")
+            member.name, f"{member.spendings:.2f}€"
+        )
 
     print()
     print(table)
@@ -86,15 +96,16 @@ def main():
     accounts = []
 
     while running:
-        match selectAction():
-            case "ADD":
-                accounts.append(enterAccount())
-            case "CALC":
-                printAccounts(accounts=accounts)
-                printHeader(accounts=accounts)
+        match select_command():
+            case Command.ADD_PERSON:
+                accounts.append(enter_account())
 
+            case Command.CALCULATE_TRANSACTIONS:
                 transactions = calculate_minimal_transactions(accounts)
-                printTransactions(transactions=transactions)
+                print_group(group=accounts)
+                print_input_information(group=accounts)
+                print_due_transactions(transactions=transactions)
                 running = False
-            case other:
+
+            case Command.EXIT:
                 running = False
