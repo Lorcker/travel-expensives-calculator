@@ -1,17 +1,15 @@
 [tool.pdm]
 
 [project]
-name = ""
-version = ""
-description = ""
+name = "travel-expenses-distributer"
+version = "1.0"
+description = "Calculates Transactions needed to distribite travel expenses evenly"
 authors = [
     {name = "Cevin", email = "cevinneubauer@tum.de"},
 ]
 dependencies = [
-    "pytest>=7.2.1",
     "InquirerPy>=0.3.4",
     "Rich>=13.2.0",
-    "pytest-unordered>=0.5.2",
 ]
 requires-python = ">=3.11"
 license = {text = "MIT"}
@@ -19,3 +17,6 @@ license = {text = "MIT"}
 [tool.pdm.scripts]
 start = "python3 module/main.py"
 test = "pytest"
+
+[tool.pdm.dev-dependencies]
+test = ["pytest"]

@@ -1,7 +1,8 @@
-from pytest_unordered import unordered
+from models import Transaction, Account
+from core import calculate_minimal_transactions
 
-from module.core import calculate_minimal_transactions
-from module.models import Transaction, Account
+import sys
+sys.path.append('module')
 
 
 def test_one_person():
@@ -20,7 +21,7 @@ def test_two_persons_with_spendings():
 
     actual = calculate_minimal_transactions([person1, person2])
 
-    assert actual == unordered(expected)
+    assert actual == expected
 
 
 def test_two_persons_with_without_spendings():
@@ -30,7 +31,7 @@ def test_two_persons_with_without_spendings():
 
     actual = calculate_minimal_transactions([person1, person2])
 
-    assert actual == unordered(expected)
+    assert actual == expected
 
 
 def test_multiple_persons_mixed_spendings():
@@ -51,4 +52,4 @@ def test_multiple_persons_mixed_spendings():
 
     actual = calculate_minimal_transactions(accounts=accounts)
 
-    assert actual == unordered(expected)
+    assert actual == expected
